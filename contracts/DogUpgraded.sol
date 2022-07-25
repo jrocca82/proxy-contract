@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 
 import "./Dog.sol";
 
+//Extends previous contract(Dog)
 contract DogsUpdated is Dog {
 
   constructor() {
