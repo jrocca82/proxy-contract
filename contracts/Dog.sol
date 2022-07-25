@@ -18,7 +18,7 @@ contract Dog is Storage {
         return _uintStorage["Dogs"];
     }
 
-    function setNumberOfDogs(uint256 _numberOfDogs) public {
+    function setNumberOfDogs(uint256 _numberOfDogs) public onlyOwner {
         _uintStorage["Dogs"] = _numberOfDogs;
     }
 }
