@@ -2,13 +2,13 @@
 pragma solidity ^0.8.9;
 
 contract Storage {
-    uint256 number;
+    //Map variable names to variable types
+    mapping(string => uint256) _uintStorage;
+    mapping(string => address) _addressStorage;
+    mapping(string => bool) _boolStorage;
+    mapping(string => string) _stringStorage;
+    mapping(string => bytes4) _bytes4;
 
-    function getNumber() internal view returns(uint256){
-        return number;
-    }   
-
-    function setNumber(uint256 _number) internal {
-        number = _number;
-    }
+    address public owner;
+    bool public _initialized;
 }

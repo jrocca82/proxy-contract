@@ -4,7 +4,6 @@ pragma solidity ^0.8.9;
 import "./Storage.sol";
 
 //Contract that users call
-
 contract Proxy is Storage {
     address public dogAddress;
 
@@ -16,13 +15,23 @@ contract Proxy is Storage {
         dogAddress = _newDogAddress;
     }
 
-    function getNumberOfDogs() public returns(bool, bytes memory) {
-        (bool res, bytes memory data) = dogAddress.delegatecall(abi.encodePacked(bytes4(keccak256("getNumberOfDogs()"))));
-        return (res, data);
+    receive() payable external {
+        //TODO: Implement function when receiving ether
     }
 
-    function setNumberOfDogs(uint256 _number) public returns (bool, bytes memory) {
-        (bool res, bytes memory data) = dogAddress.delegatecall(abi.encodePacked(bytes4(keccak256("setNumberOfDogs(uint256)")), _number));
-        return (res, data);
+    fallback() payable external {
+        address implementation = dogAddress;
+        require(dogAddress != address(0));
+        bytes memory data = msg.data;
+
+        assembly {
+            let result := delegatecall(gas(), implementation, add(data, 0x20), mload(data), 0, 0)
+            let size := returndatasize()
+            let ptr := mload(0x40)
+            returndatacopy(ptr, 0, size)
+            switch result
+                case 0 {revert(ptr, size)}
+                default {return(ptr, size)}
+        }
     }
 }

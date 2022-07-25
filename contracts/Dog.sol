@@ -4,14 +4,21 @@ pragma solidity ^0.8.9;
 import "./Storage.sol";
 
 //Contract to be replaced
-
 contract Dog is Storage {
+    modifier onlyOwner() {
+        require(msg.sender == owner, "You are not the owner");
+        _;
+    }
+
+    constructor () {
+        owner = msg.sender;
+    }
+
     function getNumberOfDogs() public view returns(uint256) {
-        return Storage.getNumber();
+        return _uintStorage["Dogs"];
     }
 
     function setNumberOfDogs(uint256 _numberOfDogs) public {
-        //Introduce bug to fix in replacement contract
-        Storage.setNumber(_numberOfDogs + 1);
+        _uintStorage["Dogs"] = _numberOfDogs;
     }
 }
